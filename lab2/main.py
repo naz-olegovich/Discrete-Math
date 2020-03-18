@@ -9,7 +9,7 @@ import logic_functions
 import tkinter.messagebox
 
 
-class Window1:
+class Main:
     A = set()
     B = set()
     R = list()
@@ -424,5 +424,5 @@ root = Tk()
 root.configure(background='#024FBF')
 root.resizable(width=False, height=False)
 root.title('Main')
-program = Window1(root)
+program = Main(root)
 root.mainloop()
