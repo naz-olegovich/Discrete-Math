@@ -3,3 +3,5 @@ def initial funck():
 
 def new_aditional_fuck():
 	pass
+
+1
