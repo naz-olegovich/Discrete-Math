@@ -2,13 +2,11 @@ from tkinter import *
 import os
 import networkx as nx
 import matplotlib.pyplot as plt
-from random import randint, sample
 from Relation_S import relations_S
 from Relation_R import relations_R
 import logic_functions
 import tkinter.messagebox
-from tkintertable.Tables import TableCanvas
-from tkintertable.TableModels import TableModel
+import webbrowser
 
 
 class Window1:
@@ -27,6 +25,8 @@ class Window1:
         elements_of_menu.add_command(label="Window 2", command=self.window2)
         elements_of_menu.add_command(label="Window 3", command=self.window3)
         elements_of_menu.add_command(label="Window 4", command=self.window4)
+        elements_of_menu.add_command(label="GitHub", command=lambda: webbrowser.open("https://github.com/naz-olegovich/Discrete-Math/tree/master/lab2(remastered)"))
+        elements_of_menu.add_command(label="Example of usage", command=lambda: webbrowser.open("https://drive.google.com/file/d/1lyB7LVkBvp1a2B5jQwguODn8Nx-EdRrB/view?usp=sharing"))
         elements_of_menu.add_command(label="Quit", command=lambda: root.quit())
         root.config(menu=main_menu)
 
@@ -57,7 +57,7 @@ class Window1:
         variant_button.grid(row=0, column=0)
         self.variant_label = Label(frame_for_variant2, font=30, bg='#002451', fg='#A9B7C6')
         self.variant_label.grid(row=0, column=1)
-
+        tkinter.messagebox.showinfo("Hello!","In case you don't know\nhow to use my programm open \n      \"Example of usage\"\nin menu")
     def window2(self):
         def save_A():
             path = os.getcwd()
@@ -107,21 +107,21 @@ class Window1:
         elements_of_menu.add_command(label="Quit", command=lambda: root.quit())
         self.win2.config(menu=main_menu)
 
-        def set_W():
-            if women_select.get() == "A":
+        def set_W(event):
+            if radiobnt_select.get() == "A":
                 for i in list_of_women.curselection():
                     self.A.add(self.list_of_women_names[i])
 
-            elif women_select.get() == "B":
+            elif radiobnt_select.get() == "B":
                 for i in list_of_women.curselection():
                     self.B.add(self.list_of_women_names[i])
 
-        def set_M():
-            if men_select.get() == "A":
+        def set_M(event):
+            if radiobnt_select.get() == "A":
                 for i in list_of_men.curselection():
                     self.A.add(self.list_of_men_names[i])
 
-            elif men_select.get() == "B":
+            elif radiobnt_select.get() == "B":
                 for i in list_of_men.curselection():
                     self.B.add(self.list_of_men_names[i])
 
@@ -129,52 +129,54 @@ class Window1:
         l_w.grid(row=0, column=0, pady=7)
         list_of_women = Listbox(self.win2, font=("Times", 16), selectmode=EXTENDED, highlightcolor="gold", bg='#284C79', fg='#A9B7C6', selectbackground='#FF8C00',
                                 relief=FLAT, yscrollcommand=set())
+        list_of_women.bind("<<ListboxSelect>>", set_W)
         self.list_of_women_names = ["Adriana", "Anna", "Elizabeth", "Camilla", "Gloria", "Helen", "Mary", "Molly", "Julia", "Selena",
                                     'Arabella', "Bella", "Carla", "Donna", "Doris", "Elly"]
         for i in self.list_of_women_names:
             list_of_women.insert(END, str(i))
-        list_of_women.grid(row=1, column=0, padx=7, pady=5)
-        women_select = StringVar()
-        women_select.set('A')
-        women_aRB = Radiobutton(self.win2, text='A', variable=women_select, value="A", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
-        women_bRB = Radiobutton(self.win2, text='B', variable=women_select, value="B", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
-        women_aRB.grid(row=2, column=0, sticky=E, padx=110)
-        women_bRB.grid(row=2, column=0, sticky=E, padx=70)
-        b_w = Button(self.win2, text="Add to", bg='#FF8C00', activebackground='#284C79', relief=FLAT, command=set_W)
-        b_w.grid(row=2, column=0, sticky=W, padx=80, pady=5)
+        list_of_women.grid(row=2, column=0, padx=7, pady=5)
+        radiobnt_select = StringVar()
+        radiobnt_select.set('A')
+        radiobtn_A = Radiobutton(self.win2, text='A', variable=radiobnt_select, value="A", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
+        radiobtn_B = Radiobutton(self.win2, text='B', variable=radiobnt_select, value="B", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
+        radiobtn_A.grid(row=1, column=0,sticky=E )
+        radiobtn_B.grid(row=1, column=1,sticky=W)
+        # b_w = Button(self.win2, text="Add to", bg='#FF8C00', activebackground='#284C79', relief=FLAT, command=set_W)
+        # b_w.grid(row=2, column=0, sticky=W, padx=80, pady=5)
 
         l_m = Label(self.win2, text="List of men names  ", font=("Arial", 15, "bold"), bg='#002451', fg='#FF8C00')
         l_m.grid(row=0, column=1, pady=7)
         list_of_men = Listbox(self.win2, font=("Times", 16), selectmode=EXTENDED, highlightcolor="gold", bg='#284C79', fg='#A9B7C6', selectbackground='#FF8C00',
                               relief=FLAT, yscrollcommand=set())
+        list_of_men.bind("<<ListboxSelect>>", set_M)
         self.list_of_men_names = ["Albert", "Alexander", "Benjamin", "Bill", "Edward", "Hector", "Isaac", "Kelvin", "Mark",
                                   "Raymond", "Samuel", "Berthold", "Christian", "Donald", "Elbert "]
         for i in self.list_of_men_names:
             list_of_men.insert(END, str(i))
-        list_of_men.grid(row=1, column=1, padx=7, pady=5)
-        men_select = StringVar()
-        men_select.set("A")
-        men_a = Radiobutton(self.win2, text='A', variable=men_select, value="A", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
-        men_b = Radiobutton(self.win2, text='B', variable=men_select, value="B", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
-        men_a.grid(row=2, column=1, sticky=E, padx=110)
-        men_b.grid(row=2, column=1, sticky=E, padx=70)
-        save_to_m = Button(self.win2, text="Add to", bg='#FF8C00', activebackground='#284C79', relief=FLAT, command=set_M)
-        save_to_m.grid(row=2, column=1, sticky=W, padx=80, pady=5)
+        list_of_men.grid(row=2, column=1, padx=7, pady=5)
+        # men_select = StringVar()
+        # men_select.set("A")
+        # men_a = Radiobutton(self.win2, text='A', variable=men_select, value="A", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
+        # men_b = Radiobutton(self.win2, text='B', variable=men_select, value="B", relief=FLAT, activebackground='#284C79', activeforeground='#FF8C00', bg='#284C79')
+        # men_a.grid(row=2, column=1, sticky=E, padx=110)
+        # men_b.grid(row=2, column=1, sticky=E, padx=70)
+        # save_to_m = Button(self.win2, text="Add to", bg='#FF8C00', activebackground='#284C79', relief=FLAT, command=set_M)
+        # save_to_m.grid(row=2, column=1, sticky=W, padx=80, pady=5)
 
         save_a_b = Button(self.win2, text="Save A to file", bg='#FF8C00', activebackground='#284C79', command=save_A)
-        save_a_b.grid(row=3, column=0, pady=5, sticky=E, padx=5)
+        save_a_b.grid(row=4, column=0, pady=5, sticky=E, padx=5)
         save_b_b = Button(self.win2, text="Save B to file", bg='#FF8C00', activebackground='#284C79', command=save_B)
-        save_b_b.grid(row=3, column=1, sticky=W, padx=5)
+        save_b_b.grid(row=4, column=1, sticky=W, padx=5)
 
         read_a_b = Button(self.win2, text="Read A from file", bg='#FF8C00', activebackground='#284C79', command=read_A)
-        read_a_b.grid(row=4, column=0, sticky=E, padx=5)
+        read_a_b.grid(row=5, column=0, sticky=E, padx=5)
         read_b_b = Button(self.win2, text="Read B from file", bg='#FF8C00', activebackground='#284C79', command=read_B)
-        read_b_b.grid(row=4, column=1, sticky=W, padx=5)
+        read_b_b.grid(row=5, column=1, sticky=W, padx=5)
 
         clear_a_b = Button(self.win2, text="Delete A", bg='#FF8C00', activebackground='#284C79', command=clear_A)
-        clear_a_b.grid(row=5, column=0, pady=5, sticky=E, padx=5)
+        clear_a_b.grid(row=6, column=0, pady=5, sticky=E, padx=5)
         clear_b_b = Button(self.win2, text="Delete B", bg='#FF8C00', activebackground='#284C79', command=clear_B)
-        clear_b_b.grid(row=5, column=1, sticky=W, padx=5)
+        clear_b_b.grid(row=6, column=1, sticky=W, padx=5)
 
     def window3(self):
         self.win3 = Toplevel(root)
@@ -395,7 +397,10 @@ class Window1:
     def R_realtion(self):
         plt.close()
         plt.title("Orange line - S\nRed line -  R")
-        self.R = relations_R(self.A, self.B, self.list_of_women_names, self.list_of_men_names)
+        try:
+            self.R = relations_R(self.A, self.B, self.list_of_women_names, self.list_of_men_names)
+        except AttributeError:
+            tkinter.messagebox.showwarning("Empty sets", 'Fill the sets from Window 2')
         self.g2 = nx.DiGraph()
 
         color_map = []
@@ -423,12 +428,17 @@ class Window1:
 
         self.S_relation()
         plt.show()
-        print(nx.to_numpy_matrix(self.g2, nodelist=self.g2.nodes()))
+
 
 
     def S_relation(self):
+        if not self.B:
+            tkinter.messagebox.showwarning("Empty set B", 'Fill the set B from Window 2')
 
-        self.S = relations_S(self.A, self.B, self.list_of_men_names, self.R)
+        try:
+            self.S = relations_S(self.A, self.B, self.list_of_men_names, self.R)
+        except AttributeError:
+            tkinter.messagebox.showwarning("Empty sets", 'Fill the sets from Window 2')
 
         self.g1 = nx.DiGraph()
         color_map = []
