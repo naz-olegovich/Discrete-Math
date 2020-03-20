@@ -21,8 +21,11 @@ def relations_S(A, B, list_of_men_names, R):
                         continue
                     if b in A:
                         continue
+                    if [a, b] in relations_S_list:
+                        continue
 
                     relations_S_list.append([a, b])
+
     print("S relation")
     print(relations_S_list)
     return relations_S_list
