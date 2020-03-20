@@ -214,7 +214,7 @@ class Window1:
         update_b = Button(self.win3, text="Update B", bg='#FF8C00', activebackground='#284C79', command=update_b)
         update_b.grid(row=2, column=2)
 
-        rel_s_b = Button(self.win3, text="Relation S and R", bg='#FF8C00', activebackground='#284C79', command=self.S_relation)  # command=self.relations_S
+        rel_s_b = Button(self.win3, text="Relation S and R", bg='#FF8C00', activebackground='#284C79', command=self.R_realtion)  # command=self.relations_S
         rel_s_b.grid(row=3, column=1, pady=3)
 
         # rel_r_b = Button(self.win3, text="Relation R", bg='#FF8C00', activebackground='#284C79', command=self.R_realtion)  # command=self.relations_R
@@ -390,10 +390,43 @@ class Window1:
         except ValueError:
             pass
 
-    def S_relation(self):
+
+
+    def R_realtion(self):
         plt.close()
         plt.title("Orange line - S\nRed line -  R")
-        self.S = relations_S(self.A, self.B, self.list_of_men_names)
+        self.R = relations_R(self.A, self.B, self.list_of_women_names, self.list_of_men_names)
+        self.g2 = nx.DiGraph()
+
+        color_map = []
+        for node1 in range(len(list(self.A))):
+            if node1 in self.A and node1 in self.B:
+                continue
+            color_map.append('blue')
+        for nod2 in list(self.B):
+            if nod2 in self.A and nod2 in self.B:
+                continue
+            color_map.append('green')
+
+        self.g2.add_nodes_from(list(self.A))
+        self.g2.add_nodes_from(list(self.B))
+        self.g2.add_edges_from(self.R)
+        pos = nx.circular_layout(self.g2)
+        #plt.figure().set_facecolor('#002451')
+        labels_t = {e: "тесть" for e in self.g2.edges()}
+        try:
+            nx.draw_networkx(self.g2, pos, edges=self.g2.edges(), edge_color="r", node_color=color_map, arrowsize=17, cmap=plt.cm.Blues, font_size=13, width=1.5)
+            nx.draw_networkx_edge_labels(self.g2, pos, edge_labels=labels_t, font_size=10, label_pos=0.3, bbox=dict(alpha=0))
+        except:
+            print('An error occurred')
+            nx.draw_networkx(self.g2, pos, edges=self.g2.edges(), edge_color="r", arrowsize=17, cmap=plt.cm.Blues, font_size=13, width=1.5)
+
+        self.S_relation()
+        plt.show()
+
+    def S_relation(self):
+
+        self.S = relations_S(self.A, self.B, self.list_of_men_names, self.R)
 
         self.g1 = nx.DiGraph()
         color_map = []
@@ -408,49 +441,16 @@ class Window1:
         self.g1.add_nodes_from(list(self.B))
         self.g1.add_edges_from(self.S)
         pos = nx.circular_layout(self.g1)
-        # plt.figure().set_facecolor('#002451')
-        labels_dad = {e:"батько" for e in self.g1.edges()}
+
+        labels_dad = {e: "батько" for e in self.g1.edges()}
         try:
             nx.draw_networkx(self.g1, pos, edges=self.g1.edges(), node_color=color_map, edge_color="#FF8C00", arrowsize=17, font_size=13, width=1.5)
-            nx.draw_networkx_edge_labels(self.g1, pos, edge_labels=labels_dad, font_size=10,bbox=dict(alpha=0))
+            nx.draw_networkx_edge_labels(self.g1, pos, edge_labels=labels_dad, font_size=10, bbox=dict(alpha=0))
         except:
             print('An error occurred')
             nx.draw_networkx(self.g1, pos, edges=self.g1.edges(), edge_color="#FF8C00", arrowsize=17, font_size=13, width=1.5)
 
-        self.R_realtion()
-        plt.show()
 
-    def R_realtion(self):
-        try:
-            self.R = relations_R(self.A, self.B, self.list_of_women_names, self.list_of_men_names, self.S)
-            self.g2 = nx.DiGraph()
-
-            color_map = []
-            for node1 in range(len(list(self.A))):
-                if node1 in self.A and node1 in self.B:
-                    continue
-                color_map.append('blue')
-            for nod2 in list(self.B):
-                if nod2 in self.A and nod2 in self.B:
-                    continue
-                color_map.append('green')
-
-            self.g2.add_nodes_from(list(self.A))
-            self.g2.add_nodes_from(list(self.B))
-            self.g2.add_edges_from(self.R)
-            pos = nx.circular_layout(self.g2)
-            # plt.figure().set_facecolor('#002451')
-            labels_t = {e: "тесть" for e in self.g2.edges()}
-            try:
-                nx.draw_networkx(self.g2, pos, edges=self.g2.edges(), edge_color="r", node_color=color_map, arrowsize=17, cmap=plt.cm.Blues, font_size=13, width=1.5)
-                nx.draw_networkx_edge_labels(self.g2, pos, edge_labels=labels_t, font_size=10, label_pos=0.3, bbox=dict(alpha=0))
-            except:
-                print('An error occurred')
-                nx.draw_networkx(self.g2, pos, edges=self.g2.edges(), edge_color="r", arrowsize=17, cmap=plt.cm.Blues, font_size=13, width=1.5)
-
-
-        except AttributeError:
-            tkinter.messagebox.showerror('Erorr', 'Empty S relation\n\nFirstly set the S relationship')
 
 
 root = Tk()
