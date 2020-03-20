@@ -7,7 +7,7 @@ from Relation_S import relations_S
 from Relation_R import relations_R
 import logic_functions
 import tkinter.messagebox
-
+import webbrowser
 
 class Window1:
     A = set()
@@ -25,6 +25,8 @@ class Window1:
         elements_of_menu.add_command(label="Window 2", command=self.window2)
         elements_of_menu.add_command(label="Window 3", command=self.window3)
         elements_of_menu.add_command(label="Window 4", command=self.window4)
+        elements_of_menu.add_command(label="GitHub", command=lambda: webbrowser.open("https://github.com/naz-olegovich/Discrete-Math/tree/master/lab2"))
+        elements_of_menu.add_command(label="Example of usage", command=lambda: webbrowser.open('https://drive.google.com/file/d/1NC99OoWdgcGovaawblOtwrtg_A3xVpeb/view?usp=sharing'))
         elements_of_menu.add_command(label="Quit", command=lambda: root.quit())
         root.config(menu=main_menu)
 
@@ -55,6 +57,7 @@ class Window1:
         variant_button.grid(row=0, column=0)
         self.variant_label = Label(frame_for_variant2, font=30, bg='#002451', fg='#A9B7C6')
         self.variant_label.grid(row=0, column=1)
+        tkinter.messagebox.showinfo("Hello", "In case you don't know\nhow to use my program open \n      \"Example of usage\"\nin menu")
 
     def window2(self):
         def save_A():
@@ -391,6 +394,8 @@ class Window1:
             pass
 
     def S_relation(self):
+        if not self.A:
+            tkinter.messagebox.showwarning("Empty set A", "Empty set A\nAdd some elements from Window 2")
         plt.close()
         plt.title("Orange line - S\nRed line -  R")
         self.S = relations_S(self.A, self.B, self.list_of_men_names)
@@ -421,6 +426,8 @@ class Window1:
         plt.show()
 
     def R_realtion(self):
+        if not self.B:
+            tkinter.messagebox.showwarning("Empty set B", "Empty set B\nAdd some elements from Window 2")
         try:
             self.R = relations_R(self.A, self.B, self.list_of_women_names, self.list_of_men_names, self.S)
             self.g2 = nx.DiGraph()
