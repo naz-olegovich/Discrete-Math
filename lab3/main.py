@@ -4,8 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import tkinter.messagebox
 import webbrowser
-
-
+import Incidence_matrix
 
 class Window1:
     A = set()
@@ -15,6 +14,7 @@ class Window1:
     bg = '#002451'
     fr_bg = '#024FBF'
     fg = '#A9B7C6'
+
     def __init__(self, main):
         self.main = root
 
@@ -47,7 +47,6 @@ class Window1:
         number_in_list_label = Label(frame_for_variant, fg='#A9B7C6', font=("Ubuntu", 15), text="Номер у списку: 28\nНомер залікової книжки: 9130", bg='#002451')
         number_in_list_label.grid(row=0, column=0)
 
-
         # separated frame for button 'Variant' and label
         frame_for_variant2 = Frame(text_frame, bg='#002451')
         frame_for_variant2.pack()
@@ -57,9 +56,9 @@ class Window1:
         self.variant_label = Label(frame_for_variant2, font=30, bg='#002451', fg='#A9B7C6')
         self.variant_label.grid(row=0, column=1)
 
-
     def window2(self):
-        def switch(event):
+
+        def on_click(event):  # для матриці суміжності
             if event.widget.get() == "0":
                 event.widget.delete(0, END)
                 event.widget.insert(END, "1")
@@ -68,6 +67,7 @@ class Window1:
                 event.widget.insert(END, "0")
 
         def build_graph():
+            # матриця суміжності
             plt.close()
             plt.title("Матриця суміжності")
             edges = list()
@@ -76,28 +76,35 @@ class Window1:
             for i in list_of_entries:
                 for j in i:
                     if j.get() == "1":
-                        index1 = list_of_entries.index(i)+1
+                        index1 = list_of_entries.index(i) + 1
                         index2 = i.index(j) + 1
                         edges.append([index1, index2])
                         node_list1.append(index1)
                         node_list2.append(index2)
-            G = nx.DiGraph()
-            pos = nx.spring_layout(G)
-            G.add_edges_from(edges)
-            # nx.draw_networkx_nodes(G, pos, nodelist=node_list1,node_color='r')
-            # nx.draw_networkx_nodes(G, pos, nodelist=node_list2,node_color='b')
+            self.G = nx.DiGraph()
+            pos = nx.spring_layout(self.G)
+            self.G.add_edges_from(edges)
+            # nx.draw_networkx_nodes(self.G, pos, nodelist=node_list1,node_color='r')
+            # nx.draw_networkx_nodes(self.G, pos, nodelist=node_list2,node_color='b')
             color_map = []
-            for i in G.nodes():
+            for i in self.G.nodes():
                 if i in node_list1:
                     color_map.append("blue")
                 else:
                     color_map.append("red")
-
             print(edges)
-
-
-            nx.draw_networkx(G, node_color=color_map,arrowsize=13, font_size=13, width=1.3)
+            nx.draw_networkx(self.G, node_color=color_map, arrowsize=13, font_size=13, width=1.3)
             plt.show()
+
+            # incidence_matrix
+
+
+
+
+
+
+
+
 
 
 
@@ -111,9 +118,6 @@ class Window1:
         frame2 = Frame(win2, bg=self.bg)
         frame2.pack()
 
-
-
-
         for i in range(10):
             l = Label(frame2, bg=self.bg, fg=self.fg, text=i + 1, font=("Arial", 21))
             l.grid(row=0, column=i + 1)
@@ -125,40 +129,32 @@ class Window1:
         for row in range(10):
             list_of_entries.append([])
             for column in range(10):
-                entry = Entry(frame2,  bg="#00387F", fg='#E8E8E7', width=3, font=("", 21), bd=3, justify=CENTER, relief=FLAT)
-                entry.grid(row=row+1, column=column+1)
+                entry = Entry(frame2, bg="#00387F", fg='#E8E8E7', width=3, font=("", 21), bd=3, justify=CENTER, relief=FLAT)
+                entry.grid(row=row + 1, column=column + 1)
                 entry.insert(END, "0")
-                entry.bind('<Button-1>', switch)
+                entry.bind('<Button-1>', on_click)
                 list_of_entries[row].append(entry)
         frame3 = Frame(win2, bg=self.bg)
         frame3.pack()
 
         b_build_graph = Button(win2, width=17, text="Build Graph", font=("Arial", 12), bg='#FF8C00', activebackground='#284C79', relief=GROOVE, command=build_graph)
         b_build_graph.pack(pady=10)
-
-
-
-
-
-
-
-
-
+        b_build_inMatrix = Button(win2, width=17, text="Build in matrix", font=("Arial", 12), bg='#FF8C00', activebackground='#284C79', relief=GROOVE,
+                                  command=lambda:Incidence_matrix.build_incidence_matrix(root, self.bg, self.G))
+        b_build_inMatrix.pack(pady=10)
 
     def determine_the_variant(self):
-        G = 91
-
-        N = 28
-        M = "ІВ"
-        print("Моя група: ", M + " -", G)
-        print("Мій номер у групі:", N)
-        if M == "ІО": N += 1
-        var = 9130 % 10 + 1
-        self.variant_label.configure(text=var)
-        print("Мій варіант:", var)
-
-
-
+        # self.G = 91
+        #
+        # N = 28
+        # M = "ІВ"
+        # print("Моя група: ", M + " -", self.G)
+        # print("Мій номер у групі:", N)
+        # if M == "ІО": N += 1
+        # var = 9130 % 10 + 1
+        # self.variant_label.configure(text=var)
+        # print("Мій варіант:", var)
+        pass
 
 root = Tk()
 root.configure(background='#024FBF')
