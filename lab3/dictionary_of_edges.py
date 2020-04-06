@@ -11,7 +11,7 @@ def show_dictionary_of_edges(root, bg, G):
     frame_for_edges = Frame(win_for_edges, bg=bg)
     frame_for_edges.pack()
 
-    listbox = Listbox(frame_for_edges, font=("Arial", 17), selectmode=EXTENDED, highlightcolor="gold", bg='#284C79', fg='#A9B7C6', selectbackground='#FF8C00',
+    listbox = Listbox(frame_for_edges, font=("Arial", 17), selectmode=EXTENDED, highlightcolor="gold", bg="#00387F", fg='#A9B7C6', selectbackground='#FF8C00',
                       relief=FLAT, justify=CENTER, yscrollcommand=set())
     listbox.pack(side=LEFT)
 
